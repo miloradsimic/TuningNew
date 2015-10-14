@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TuningNew</string>
+
+    <string name="start_recording">Start Recording</string>
+    <string name="stop_recording">Stop Recording</string>
+    <string name="text_title">Dorian chromatic scale:</string>
+    <string name="text_frequency">E - F - F# - A - B - C - C#</string>
+</resources>
