@@ -28,7 +28,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@drawable/logo"/>
+        android:background="@drawable/logo"
+        android:id="@+id/linearLayout"
+        android:orientation="horizontal" />
 
 
     <com.zerocode.views.CustomTV
@@ -58,5 +60,31 @@
         android:textSize="70sp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"/>
+
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="32dp"
+        android:layout_below="@+id/btn_start"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/radioGroup">
+        <RadioButton android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="432"
+            android:id="@+id/rb432"
+            android:checked="true"
+            android:layout_below="@+id/btn_start"
+            android:layout_toLeftOf="@+id/rb440"
+            android:layout_toStartOf="@+id/rb440" />
+        <RadioButton android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="440"
+            android:id="@+id/rb440"
+            android:checked="false"
+            android:layout_alignTop="@+id/rb432"
+            android:layout_alignLeft="@+id/frequency"
+            android:layout_alignStart="@+id/frequency" />
+    </RadioGroup>
 
 </RelativeLayout>

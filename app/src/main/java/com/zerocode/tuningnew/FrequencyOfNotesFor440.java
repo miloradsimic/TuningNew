@@ -2,8 +2,9 @@ package com.zerocode.tuningnew;
 
 /**
  * Created by tbojan on 31.8.2015.
+ * Updated by milorad on 15.10.2015.
  */
-public enum FrequencyOfNotes {
+public enum FrequencyOfNotesFor440 {
     A3 ("A", 220.00),
     A3B3 ("A#", 233.08),
     B3 ("B", 246.94),
@@ -33,7 +34,7 @@ public enum FrequencyOfNotes {
     private String mName;
     private double mFrequency;
 
-    FrequencyOfNotes(String name, double frequency) {
+    FrequencyOfNotesFor440(String name, double frequency) {
         this.mName = name;
         this.mFrequency = frequency;
     }

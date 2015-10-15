@@ -1,8 +1,6 @@
 package com.zerocode.tuningnew;
 
-import android.app.ActionBar;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
@@ -10,14 +8,12 @@ import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zerocode.fft.RealDoubleFFT;
 
@@ -27,10 +23,33 @@ public class MainActivity extends ActionBarActivity {
     private boolean isRecording = false;    //is Recording started or not
     private Button btnStartRecording;   //button for start recording
     private Button btnStopRecording;    //button for stop recording
+    /**
+     * Button for choosing range of frequencies (432 or 440)
+     * Author: Milorad
+     */
+    private RadioButton rb432;
+    /**
+     * Button for choosing range of frequencies (432 or 440)
+     * Author: Milorad
+     */
+    private RadioButton rb440;
 
     private int frequency = 8000;   //sample rate
     private int channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_MONO;
     private int audioEncoding = AudioFormat.ENCODING_PCM_16BIT;
+
+
+    /**
+     * Buffer in which we store measurements
+     * Author: Milorad
+     */
+    private CircularBuffer freqBuffer;
+    private int bufferLength;   //length of buffer
+    /**
+     * Counter for measurements, one refresh of display per few measurements, specified by counter
+     * Author: Milorad
+     */
+    private int cntDisplayReading;
 
     AudioRecord audioRecord;
     RecordAudio recordTask;
@@ -54,6 +73,13 @@ public class MainActivity extends ActionBarActivity {
 
         mFrequence = (TextView) findViewById(R.id.frequency);
 
+        bufferLength = 10;
+        freqBuffer = new CircularBuffer(bufferLength);
+        cntDisplayReading = 0;
+
+        rb432 = (RadioButton) findViewById(R.id.rb432);
+        rb440 = (RadioButton) findViewById(R.id.rb440);
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);   //keep screen on when app open
 
     }
@@ -65,9 +91,11 @@ public class MainActivity extends ActionBarActivity {
         isRecording = true;
         recordTask = new RecordAudio();
         recordTask.execute();   //start new thread
+        rb432.setEnabled(false);
+        rb440.setEnabled(false);
     }
 
-    //function to start recording
+    //function to stop recording
     public void stopRecording(View v) {
         if (isRecording) {
             audioRecord.stop();
@@ -75,6 +103,8 @@ public class MainActivity extends ActionBarActivity {
             btnStopRecording.setVisibility(View.INVISIBLE);
             btnStartRecording.setVisibility(View.VISIBLE);
             recordTask.cancel(false);
+            rb432.setEnabled(true);
+            rb440.setEnabled(true);
         }
     }
 
@@ -146,7 +176,18 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected void onProgressUpdate(Double... progress) {
             //write notes in text view
-            mFrequence.setText(checkNote(progress[0]));
+
+            //will be used later
+            /*freqBuffer.store(progress[0]);
+            if(++cntDisplayReading == 4) {
+                mFrequence.setText(checkNote(freqBuffer.getAverage()));
+                cntDisplayReading=0;
+            }*/
+
+            if(((RadioButton) findViewById(R.id.rb432)).isChecked())
+                mFrequence.setText(checkNoteFor432(progress[0]));
+            else
+                mFrequence.setText(checkNoteFor440(progress[0]));
         }
 
         @Override
@@ -157,52 +198,158 @@ public class MainActivity extends ActionBarActivity {
 
 
     //function which set note
-    public String checkNote(double freq) {
+    public String checkNoteFor440(double freq) {
         DecimalFormat twoDecimal = new DecimalFormat("#.00");
         //check if frequency less than first note
-        if (Double.valueOf(twoDecimal.format(freq)) < FrequencyOfNotes.values()[0].getFrequency() - 6) {
+        if (Double.valueOf(twoDecimal.format(freq)) < FrequencyOfNotesFor440.values()[0].getFrequency() - 6) {
             mFrequence.setTextColor(Color.RED);
-            return ">>> " + FrequencyOfNotes.values()[0].getName();
+            return Double.valueOf(twoDecimal.format(freq)).toString();
+            //return ">>> " + FrequencyOfNotesFor440.values()[0].getName();
         }
         //check if frequency bigger than last note
-        if (Double.valueOf(twoDecimal.format(freq)) > FrequencyOfNotes.values()[FrequencyOfNotes.values().length - 1].getFrequency() + 6) {
+        if (Double.valueOf(twoDecimal.format(freq)) > FrequencyOfNotesFor440.values()[FrequencyOfNotesFor440.values().length - 1].getFrequency() + 6) {
             mFrequence.setTextColor(Color.RED);
-            return FrequencyOfNotes.values()[FrequencyOfNotes.values().length - 1].getName() + " <<<";
+            return Double.valueOf(twoDecimal.format(freq)).toString();
+            //return FrequencyOfNotesFor440.values()[FrequencyOfNotesFor440.values().length - 1].getName() + " <<<";
         }
         //check which note is current frequency
-        for (int i = 0; i < FrequencyOfNotes.values().length - 1; i++) {
-            //if frequency sama like some note
-            if ((Double.valueOf(twoDecimal.format(freq)) >= FrequencyOfNotes.values()[i].getFrequency() - 6)
-                    && (Double.valueOf(twoDecimal.format(freq)) <= FrequencyOfNotes.values()[i].getFrequency() + 6)) {
-                if((FrequencyOfNotes.values()[i] == FrequencyOfNotes.E4) || (FrequencyOfNotes.values()[i] == FrequencyOfNotes.F4) ||
-                        (FrequencyOfNotes.values()[i] == FrequencyOfNotes.F4G4) ||(FrequencyOfNotes.values()[i] == FrequencyOfNotes.A4) ||
-                        (FrequencyOfNotes.values()[i] == FrequencyOfNotes.B4) ||(FrequencyOfNotes.values()[i] == FrequencyOfNotes.C5) ||
-                        (FrequencyOfNotes.values()[i] == FrequencyOfNotes.C5D5) || (FrequencyOfNotes.values()[i] == FrequencyOfNotes.E5) ||
-                        (FrequencyOfNotes.values()[i] == FrequencyOfNotes.F5) || (FrequencyOfNotes.values()[i] == FrequencyOfNotes.F5G5)||
-                        (FrequencyOfNotes.values()[i] == FrequencyOfNotes.A3) ||(FrequencyOfNotes.values()[i] == FrequencyOfNotes.A5) ||
-                        (FrequencyOfNotes.values()[i] == FrequencyOfNotes.B3) ||(FrequencyOfNotes.values()[i] == FrequencyOfNotes.C4) ||
-                        (FrequencyOfNotes.values()[i] == FrequencyOfNotes.C4D4)) {
+        for (int i = 0; i < FrequencyOfNotesFor440.values().length - 1; i++) {
+            //if frequency same like some note
+            if ((Double.valueOf(twoDecimal.format(freq)) >= FrequencyOfNotesFor440.values()[i].getFrequency() - 6)
+                    && (Double.valueOf(twoDecimal.format(freq)) <= FrequencyOfNotesFor440.values()[i].getFrequency() + 6)) {
+                if((FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.E4) || (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F4G4) ||(FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.B4) ||(FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C5D5) || (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.E5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F5) || (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F5G5)||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A3) ||(FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.B3) ||(FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C4D4)) {
                     mFrequence.setTextColor(Color.GREEN);
                 }else{
                     mFrequence.setTextColor(Color.RED);
                 }
-                return FrequencyOfNotes.values()[i].getName();
+                return Double.valueOf(twoDecimal.format(freq)).toString();
+                //return FrequencyOfNotesFor440.values()[i].getName();
             } else {
                 //if frequency between two notes
-                if (FrequencyOfNotes.values()[i].getFrequency() + 6 < Double.valueOf(twoDecimal.format(freq))
-                        && Double.valueOf(twoDecimal.format(freq)) < FrequencyOfNotes.values()[i + 1].getFrequency() - 6) {
-                    if (Double.valueOf(twoDecimal.format(freq)) - FrequencyOfNotes.values()[i].getFrequency() <
-                            FrequencyOfNotes.values()[i + 1].getFrequency() - Double.valueOf(twoDecimal.format(freq))) {
+                if (FrequencyOfNotesFor440.values()[i].getFrequency() + 6 < Double.valueOf(twoDecimal.format(freq))
+                        && Double.valueOf(twoDecimal.format(freq)) < FrequencyOfNotesFor440.values()[i + 1].getFrequency() - 6) {
+                    if (Double.valueOf(twoDecimal.format(freq)) - FrequencyOfNotesFor440.values()[i].getFrequency() <
+                            FrequencyOfNotesFor440.values()[i + 1].getFrequency() - Double.valueOf(twoDecimal.format(freq))) {
                         mFrequence.setTextColor(Color.RED);
-                        return FrequencyOfNotes.values()[i].getName() + " <<<";
+                        //return Double.valueOf(twoDecimal.format(freq)).toString();
+                        return FrequencyOfNotesFor440.values()[i].getName() + " <<<";
                     } else {
                         mFrequence.setTextColor(Color.RED);
-                        return ">>> " + FrequencyOfNotes.values()[i + 1].getName();
+                        return Double.valueOf(twoDecimal.format(freq)).toString();
+                        //return ">>> " + FrequencyOfNotesFor440.values()[i + 1].getName();
                     }
                 }
             }
         }
 
         return null;
+    }
+
+    /**
+     * Function find which note is closest to measured frequency
+     * @param freq Measured frequency
+     * @return  Note from range of A3-A5
+     */
+    public String checkNoteFor432(double freq) {
+        DecimalFormat twoDecimal = new DecimalFormat("#.00");
+        //check if frequency less than first note
+        if (Double.valueOf(twoDecimal.format(freq)) < FrequencyOfNotesFor432.values()[0].getFrequency() - 6) {
+            mFrequence.setTextColor(Color.RED);
+            return Double.valueOf(twoDecimal.format(freq)).toString();
+            //return ">>> " + FrequencyOfNotes.values()[0].getName();
+        }
+        //check if frequency bigger than last note
+        if (Double.valueOf(twoDecimal.format(freq)) > FrequencyOfNotesFor432.values()[FrequencyOfNotesFor432.values().length - 1].getFrequency() + 6) {
+            mFrequence.setTextColor(Color.RED);
+            return Double.valueOf(twoDecimal.format(freq)).toString();
+            //return FrequencyOfNotes.values()[FrequencyOfNotes.values().length - 1].getName() + " <<<";
+        }
+        //check which note is current frequency
+        for (int i = 0; i < FrequencyOfNotesFor432.values().length - 1; i++) {
+            //if frequency same like some note
+            if ((Double.valueOf(twoDecimal.format(freq)) >= FrequencyOfNotesFor432.values()[i].getFrequency() - 6)
+                    && (Double.valueOf(twoDecimal.format(freq)) <= FrequencyOfNotesFor432.values()[i].getFrequency() + 6)) {
+                if((FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.E4) || (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F4) ||
+                        (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F4G4) ||(FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A4) ||
+                        (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.B4) ||(FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C5) ||
+                        (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C5D5) || (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.E5) ||
+                        (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F5) || (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F5G5)||
+                        (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A3) ||(FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A5) ||
+                        (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.B3) ||(FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C4) ||
+                        (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C4D4)) {
+                    mFrequence.setTextColor(Color.GREEN);
+                }else{
+                    mFrequence.setTextColor(Color.RED);
+                }
+                return Double.valueOf(twoDecimal.format(freq)).toString();
+                //return FrequencyOfNotes.values()[i].getName();
+            } else {
+                //if frequency between two notes
+                if (FrequencyOfNotesFor432.values()[i].getFrequency() + 6 < Double.valueOf(twoDecimal.format(freq))
+                        && Double.valueOf(twoDecimal.format(freq)) < FrequencyOfNotesFor432.values()[i + 1].getFrequency() - 6) {
+                    if (Double.valueOf(twoDecimal.format(freq)) - FrequencyOfNotesFor432.values()[i].getFrequency() <
+                            FrequencyOfNotesFor432.values()[i + 1].getFrequency() - Double.valueOf(twoDecimal.format(freq))) {
+                        mFrequence.setTextColor(Color.RED);
+                        //return Double.valueOf(twoDecimal.format(freq)).toString();
+                        return FrequencyOfNotesFor432.values()[i].getName() + " <<<";
+                    } else {
+                        mFrequence.setTextColor(Color.RED);
+                        return Double.valueOf(twoDecimal.format(freq)).toString();
+                        //return ">>> " + FrequencyOfNotes.values()[i + 1].getName();
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * This class represents circular buffer. Starts from zero, and after last element cursor starts again from zero.
+     * There is no method for deleting elements. New elements override old ones on current position.
+     * Author: Milorad
+     */
+    class CircularBuffer {
+        private double data[];
+        private int head;
+
+        public CircularBuffer(Integer number) {
+            data = new double[number];
+            head = 0;
+        }
+        /**
+         * Adding new element on next position.
+         */
+        public void store(double value) {
+            data[head++] = value;
+            if (head == bufferLength) {
+                head = 0;
+            }
+        }
+        /**
+         * Counts by algorithm average value among buffer elements.
+         */
+        public double getAverage() {
+            double average = 0;
+            double retVal = 0;
+            int cntRetVal = 0;
+            for (int i = 0; i<bufferLength; i++)
+                average += data[i];
+            average = average/bufferLength;
+            //Remove elements with high deviation from counting
+            for (int i = 0; i<bufferLength; i++)
+                if(data[i] < average*1.1 && data[i] > average*0.9) {
+                    retVal += data[i];
+                    cntRetVal++;
+                }
+            return retVal/cntRetVal;
+        }
     }
 }
