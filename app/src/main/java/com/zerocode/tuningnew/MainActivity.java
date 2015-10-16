@@ -7,12 +7,10 @@ import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.zerocode.fft.RealDoubleFFT;
@@ -34,8 +32,8 @@ public class MainActivity extends ActionBarActivity {
      */
     private RadioButton rb440;
 
-    private int frequency = 8000;   //sample rate
-    private int channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_MONO;
+    private int frequency = 8000;   //sample rate for max 3600Hz frequencies (more info here: http://wiki.audacityteam.org/wiki/Sample_Rates)
+    private int channelConfiguration = AudioFormat.CHANNEL_IN_MONO;
     private int audioEncoding = AudioFormat.ENCODING_PCM_16BIT;
 
 
@@ -43,7 +41,7 @@ public class MainActivity extends ActionBarActivity {
      * Buffer in which we store measurements
      * Author: Milorad
      */
-    private CircularBuffer freqBuffer;
+    private CircularBuffer freqCircularBuffer;
     private int bufferLength;   //length of buffer
     /**
      * Counter for measurements, one refresh of display per few measurements, specified by counter
@@ -73,8 +71,8 @@ public class MainActivity extends ActionBarActivity {
 
         mFrequence = (TextView) findViewById(R.id.frequency);
 
-        bufferLength = 10;
-        freqBuffer = new CircularBuffer(bufferLength);
+        bufferLength = 5;
+        freqCircularBuffer = new CircularBuffer(bufferLength);
         cntDisplayReading = 0;
 
         rb432 = (RadioButton) findViewById(R.id.rb432);
@@ -127,12 +125,13 @@ public class MainActivity extends ActionBarActivity {
             while (isRecording) {
 
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
-                double max_magnitude = -5000;
+                //Maximal magnitude for 8000Hz sample rate is 3600Hz (More info on: http://wiki.audacityteam.org/wiki/Sample_Rates)
+                //We use frequencies in range 216Hz - 880Hz
+                double max_magnitude = -5000; //Max magnitude from specter (buffer) we recorded. This is initial value;
                 double max_index = -1;
                 double re;
                 double im;
@@ -177,17 +176,19 @@ public class MainActivity extends ActionBarActivity {
         protected void onProgressUpdate(Double... progress) {
             //write notes in text view
 
-            //will be used later
-            /*freqBuffer.store(progress[0]);
-            if(++cntDisplayReading == 4) {
-                mFrequence.setText(checkNote(freqBuffer.getAverage()));
-                cntDisplayReading=0;
-            }*/
 
+            freqCircularBuffer.store(progress[0]);
+            if(++cntDisplayReading == 5) {
+                mFrequence.setText(checkNoteFor440(freqCircularBuffer.getAverage()));   //displays info on display every thread_sleep*cntDisplayReadingMAX (currently 0.5*5 seconds)
+                cntDisplayReading=0;
+            }
+
+            /*
             if(((RadioButton) findViewById(R.id.rb432)).isChecked())
                 mFrequence.setText(checkNoteFor432(progress[0]));
             else
                 mFrequence.setText(checkNoteFor440(progress[0]));
+            */
         }
 
         @Override
@@ -203,34 +204,41 @@ public class MainActivity extends ActionBarActivity {
         //check if frequency less than first note
         if (Double.valueOf(twoDecimal.format(freq)) < FrequencyOfNotesFor440.values()[0].getFrequency() - 6) {
             mFrequence.setTextColor(Color.RED);
-            return Double.valueOf(twoDecimal.format(freq)).toString();
-            //return ">>> " + FrequencyOfNotesFor440.values()[0].getName();
+            //return Double.valueOf(twoDecimal.format(freq)).toString();
+            return ">>> " + FrequencyOfNotesFor440.values()[0].getName();
         }
         //check if frequency bigger than last note
         if (Double.valueOf(twoDecimal.format(freq)) > FrequencyOfNotesFor440.values()[FrequencyOfNotesFor440.values().length - 1].getFrequency() + 6) {
             mFrequence.setTextColor(Color.RED);
-            return Double.valueOf(twoDecimal.format(freq)).toString();
-            //return FrequencyOfNotesFor440.values()[FrequencyOfNotesFor440.values().length - 1].getName() + " <<<";
+            //return Double.valueOf(twoDecimal.format(freq)).toString();
+            return FrequencyOfNotesFor440.values()[FrequencyOfNotesFor440.values().length - 1].getName() + " <<<";
         }
         //check which note is current frequency
         for (int i = 0; i < FrequencyOfNotesFor440.values().length - 1; i++) {
             //if frequency same like some note
             if ((Double.valueOf(twoDecimal.format(freq)) >= FrequencyOfNotesFor440.values()[i].getFrequency() - 6)
                     && (Double.valueOf(twoDecimal.format(freq)) <= FrequencyOfNotesFor440.values()[i].getFrequency() + 6)) {
-                if((FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.E4) || (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F4) ||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F4G4) ||(FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A4) ||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.B4) ||(FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C5) ||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C5D5) || (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.E5) ||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F5) || (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F5G5)||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A3) ||(FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A5) ||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.B3) ||(FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C4) ||
+                if((FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.E4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F4G4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.B4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C5D5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.E5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F5G5)||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A3) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.B3) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C4) ||
                         (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C4D4)) {
                     mFrequence.setTextColor(Color.GREEN);
                 }else{
                     mFrequence.setTextColor(Color.RED);
                 }
-                return Double.valueOf(twoDecimal.format(freq)).toString();
-                //return FrequencyOfNotesFor440.values()[i].getName();
+                //return Double.valueOf(twoDecimal.format(freq)).toString();
+                return FrequencyOfNotesFor440.values()[i].getName();
             } else {
                 //if frequency between two notes
                 if (FrequencyOfNotesFor440.values()[i].getFrequency() + 6 < Double.valueOf(twoDecimal.format(freq))
@@ -239,11 +247,11 @@ public class MainActivity extends ActionBarActivity {
                             FrequencyOfNotesFor440.values()[i + 1].getFrequency() - Double.valueOf(twoDecimal.format(freq))) {
                         mFrequence.setTextColor(Color.RED);
                         //return Double.valueOf(twoDecimal.format(freq)).toString();
-                        return FrequencyOfNotesFor440.values()[i].getName() + " <<<";
+                        return FrequencyOfNotesFor440.values()[i].getName();
                     } else {
                         mFrequence.setTextColor(Color.RED);
-                        return Double.valueOf(twoDecimal.format(freq)).toString();
-                        //return ">>> " + FrequencyOfNotesFor440.values()[i + 1].getName();
+                        //return Double.valueOf(twoDecimal.format(freq)).toString();
+                        return FrequencyOfNotesFor440.values()[i + 1].getName();
                     }
                 }
             }
@@ -262,14 +270,14 @@ public class MainActivity extends ActionBarActivity {
         //check if frequency less than first note
         if (Double.valueOf(twoDecimal.format(freq)) < FrequencyOfNotesFor432.values()[0].getFrequency() - 6) {
             mFrequence.setTextColor(Color.RED);
-            return Double.valueOf(twoDecimal.format(freq)).toString();
-            //return ">>> " + FrequencyOfNotes.values()[0].getName();
+            //return Double.valueOf(twoDecimal.format(freq)).toString();
+            return ">>> " + FrequencyOfNotesFor432.values()[0].getName();
         }
         //check if frequency bigger than last note
         if (Double.valueOf(twoDecimal.format(freq)) > FrequencyOfNotesFor432.values()[FrequencyOfNotesFor432.values().length - 1].getFrequency() + 6) {
             mFrequence.setTextColor(Color.RED);
-            return Double.valueOf(twoDecimal.format(freq)).toString();
-            //return FrequencyOfNotes.values()[FrequencyOfNotes.values().length - 1].getName() + " <<<";
+            //return Double.valueOf(twoDecimal.format(freq)).toString();
+            return FrequencyOfNotesFor432.values()[FrequencyOfNotesFor432.values().length - 1].getName() + " <<<";
         }
         //check which note is current frequency
         for (int i = 0; i < FrequencyOfNotesFor432.values().length - 1; i++) {
@@ -297,8 +305,8 @@ public class MainActivity extends ActionBarActivity {
                     if (Double.valueOf(twoDecimal.format(freq)) - FrequencyOfNotesFor432.values()[i].getFrequency() <
                             FrequencyOfNotesFor432.values()[i + 1].getFrequency() - Double.valueOf(twoDecimal.format(freq))) {
                         mFrequence.setTextColor(Color.RED);
-                        //return Double.valueOf(twoDecimal.format(freq)).toString();
-                        return FrequencyOfNotesFor432.values()[i].getName() + " <<<";
+                        return Double.valueOf(twoDecimal.format(freq)).toString();
+                        //return FrequencyOfNotesFor432.values()[i].getName() + " <<<";
                     } else {
                         mFrequence.setTextColor(Color.RED);
                         return Double.valueOf(twoDecimal.format(freq)).toString();
@@ -337,12 +345,18 @@ public class MainActivity extends ActionBarActivity {
          * Counts by algorithm average value among buffer elements.
          */
         public double getAverage() {
-            double average = 0;
-            double retVal = 0;
-            int cntRetVal = 0;
-            for (int i = 0; i<bufferLength; i++)
+            double average = 0; //average value
+            double retVal = 0;  //return value
+            int cntRetVal = 0;  //counter for values that stays in deviation range
+            for (int i = 0; i<bufferLength; i++) {
                 average += data[i];
+
+            }
             average = average/bufferLength;
+
+
+
+            /*
             //Remove elements with high deviation from counting
             for (int i = 0; i<bufferLength; i++)
                 if(data[i] < average*1.1 && data[i] > average*0.9) {
@@ -350,6 +364,8 @@ public class MainActivity extends ActionBarActivity {
                     cntRetVal++;
                 }
             return retVal/cntRetVal;
+            */
+            return average;
         }
     }
 }
