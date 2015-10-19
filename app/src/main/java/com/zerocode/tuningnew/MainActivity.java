@@ -218,21 +218,103 @@ public class MainActivity extends ActionBarActivity {
             //if frequency same like some note
             if ((Double.valueOf(twoDecimal.format(freq)) >= FrequencyOfNotesFor440.values()[i].getFrequency() - 6)
                     && (Double.valueOf(twoDecimal.format(freq)) <= FrequencyOfNotesFor440.values()[i].getFrequency() + 6)) {
-                if((FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.E4) ||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F4) ||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F4G4) ||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A4) ||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.B4) ||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C5) ||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C5D5) ||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.E5) ||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F5) ||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F5G5)||
+                if(
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A0) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A0B0) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.B0) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C1) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C1D1) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.D1) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.D1E1) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.E1) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F1) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F1G1) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.G1) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.G1A1) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A1) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A1B1) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.B1) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C2) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C2D2) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.D2) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.D2E2) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.E2) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F2) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F2G2) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.G2) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.G2A2) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A2) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A2B2) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.B2) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C3) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C3D3) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.D3) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.D3E3) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.E3) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F3) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F3G3) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.G3) ||
                         (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A3) ||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A3B3) ||
                         (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.B3) ||
                         (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C4) ||
-                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C4D4)) {
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C4D4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.D4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.D4E4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.E4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F4G4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.G4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.G4A4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A4B4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.B4) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C5D5)||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.D5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.D5E5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.E5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F5G5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.G5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.G5A5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A5B5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.B5) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C6) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C6D6) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.D6) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.D6E6) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.E6) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F6) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F6G6) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.G6) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.G6A6) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A6) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A6B6) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.B6) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C7) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C7D7) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.D7) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.D7E7) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.E7) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F7) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F7G7) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.G7) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.G7A7) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A7) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A7B7) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.B7) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C8) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.C8D8) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.D8) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.D8E8) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.E8) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F8) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.F8G8) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.G8) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.G8A8) ||
+                        (FrequencyOfNotesFor440.values()[i] == FrequencyOfNotesFor440.A8)) {
                     mFrequence.setTextColor(Color.GREEN);
                 }else{
                     mFrequence.setTextColor(Color.RED);
@@ -284,14 +366,104 @@ public class MainActivity extends ActionBarActivity {
             //if frequency same like some note
             if ((Double.valueOf(twoDecimal.format(freq)) >= FrequencyOfNotesFor432.values()[i].getFrequency() - 6)
                     && (Double.valueOf(twoDecimal.format(freq)) <= FrequencyOfNotesFor432.values()[i].getFrequency() + 6)) {
-                if((FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.E4) || (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F4) ||
-                        (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F4G4) ||(FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A4) ||
-                        (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.B4) ||(FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C5) ||
-                        (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C5D5) || (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.E5) ||
-                        (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F5) || (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F5G5)||
-                        (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A3) ||(FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A5) ||
-                        (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.B3) ||(FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C4) ||
-                        (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C4D4)) {
+                if(
+                        (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A0) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A0B0) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.B0) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C1) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C1D1) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.D1) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.D1E1) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.E1) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F1) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F1G1) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.G1) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.G1A1) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A1) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A1B1) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.B1) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C2) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C2D2) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.D2) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.D2E2) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.E2) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F2) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F2G2) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.G2) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.G2A2) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A2) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A2B2) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.B2) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C3) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C3D3) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.D3) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.D3E3) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.E3) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F3) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F3G3) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.G3) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A3) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A3B3) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.B3) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C4) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C4D4) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.D4) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.D4E4) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.E4) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F4) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F4G4) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.G4) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.G4A4) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A4) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A4B4) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.B4) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C5) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C5D5)||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.D5) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.D5E5) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.E5) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F5) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F5G5) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.G5) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.G5A5) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A5) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A5B5) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.B5) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C6) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C6D6) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.D6) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.D6E6) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.E6) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F6) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F6G6) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.G6) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.G6A6) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A6) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A6B6) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.B6) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C7) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C7D7) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.D7) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.D7E7) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.E7) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F7) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F7G7) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.G7) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.G7A7) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A7) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A7B7) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.B7) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C8) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.C8D8) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.D8) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.D8E8) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.E8) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F8) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.F8G8) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.G8) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.G8A8) ||
+                                (FrequencyOfNotesFor432.values()[i] == FrequencyOfNotesFor432.A8)) {
+
                     mFrequence.setTextColor(Color.GREEN);
                 }else{
                     mFrequence.setTextColor(Color.RED);
